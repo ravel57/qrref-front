@@ -1,4 +1,8 @@
 import { createApp } from 'vue'
+// import { createStore } from 'vuex'
 import App from './App.vue'
+import { connect } from './util/ws'
 
-createApp(App).mount('#app')
+connect()
+
+/*const app  = */createApp(App).mount('#app')

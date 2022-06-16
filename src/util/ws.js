@@ -1,5 +1,6 @@
 import SockJS from 'sockjs-client'
 import {Stomp} from '@stomp/stompjs'
+// import store from '@/store/index'
 
 
 var stompClient = null
@@ -14,11 +15,10 @@ export function connect() {
 
 
 function callback(message) {
-    let m = JSON.parse(message.body)
-    let element = document.getElementById("messages")
-    if (element) {
-        console.log(m)
-    }
+    console.log(JSON.parse(message.body))
+    // console.log(store.getters.key)
+    // if (store.getters.key == JSON.parse(message.body).key)
+    //     alert(message.body)
 }
 
 
@@ -27,18 +27,4 @@ export function disconnect() {
         stompClient.disconnect()
     }
     console.log("Disconnected")
-}
-
-export function sendMessage(message) {
-    // console.log(message)
-    stompClient.send("/app/changeMessage", {}, JSON.stringify(message))
-}
-
-export function sendTask(task) {
-    stompClient.send("/app/changeTask", {}, JSON.stringify(task))
-}
-
-export function sendClient(client) {
-    console.log(client)
-    stompClient.send("/app/changeClient", {}, JSON.stringify(client))
 }

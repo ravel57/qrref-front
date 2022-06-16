@@ -1,74 +1,71 @@
 <template>
-  <div>
-    <p class="error">{{ error }}</p>
-    <p class="decode-result">Last result: <b>{{ result }}</b></p>
+  <div class="main">
+    <div>
+      <button
+          class="buttons"
+          @click="isMobileMode=false"
+          v-text="'host'"
+      />
+      <button
+          class="buttons"
+          @click="isMobileMode=true"
+          v-text="'scanner'"
+      />
+    </div>
+    <Scanner v-if="isMobileMode"/>
+    <Host v-else/>
 
-    <qrcode-stream
-        @decode="onDecode"
-        @init="onInit"
-        class="scanner"
-    />
-
-    <HelloWorld msg="test"/>
   </div>
 </template>
 
 
 <script>
-import {QrcodeStream} from '../node_modules/vue-qrcode-reader/src'
+
+import Scanner from "@/components/Scanner";
+import Host from "@/components/Host";
 
 export default {
 
+
   components: {
-    QrcodeStream
+    Scanner,
+    Host
   },
 
   data() {
     return {
-      result: '',
-      error: ''
+      isMobileMode: true
     }
   },
 
-  methods: {
-    onDecode(result) {
-      this.result = result
-    },
+  mounted() {
+    this.isMobileMode = this.isMobile
+  },
 
-    async onInit(promise) {
-      try {
-        await promise
-      } catch (error) {
-        if (error.name === 'NotAllowedError') {
-          this.error = "ERROR: you need to grant camera access permission"
-        } else if (error.name === 'NotFoundError') {
-          this.error = "ERROR: no camera on this device"
-        } else if (error.name === 'NotSupportedError') {
-          this.error = "ERROR: secure context required (HTTPS, localhost)"
-        } else if (error.name === 'NotReadableError') {
-          this.error = "ERROR: is the camera already in use?"
-        } else if (error.name === 'OverconstrainedError') {
-          this.error = "ERROR: installed cameras are not suitable"
-        } else if (error.name === 'StreamApiNotSupportedError') {
-          this.error = "ERROR: Stream API is not supported in this browser"
-        } else if (error.name === 'InsecureContextError') {
-          this.error = 'ERROR: Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP.';
-        } else {
-          this.error = `ERROR: Camera error (${error.name})`;
-        }
+  methods: {},
+
+  computed: {
+    isMobile() {
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        return true
+      } else {
+        return false
       }
     }
   }
+
 }
 </script>
 
-<style scoped>
-.error {
-  font-weight: bold;
-  color: red;
+<style>
+.main {
+  text-align: center;
 }
 
-.scanner {
-  width: 50vw;
+.buttons {
+  margin: 0 50px 15px;
+  cursor: pointer;
+  font-size: 25px;
+  padding: 10px 50px;
 }
 </style>
