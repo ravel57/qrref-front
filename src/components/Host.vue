@@ -1,6 +1,7 @@
 <template>
   <div>
-    <p class="decode-result">text: {{ text }}</p>
+    <p class="decode-result"
+       v-text="text"/>
     <img id="qr-img"
          :src="'/getQr/'+key"/>
   </div>
@@ -44,5 +45,8 @@ export default {
 <style>
 #qr-img {
   /*height: 75vh;*/
+}
+.decode-result{
+  font-size: 24px;
 }
 </style>
