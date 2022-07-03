@@ -1,11 +1,15 @@
 <template>
   <div>
-    <img :src="'/getQr/'+key"/>
+    <p class="decode-result">text: {{ text }}</p>
+    <img id="qr-img"
+         :src="'/getQr/'+key"/>
   </div>
 </template>
 
+
 <script>
 import axios from "axios";
+import {connect, getText} from '@/util/ws'
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -14,18 +18,31 @@ export default {
   data() {
     return {
       key: '',
+      text: '',
     }
   },
 
   mounted() {
-    axios.get('/getKey').then(response => this.key = response.data)
-    // this.$store.commit('saveKey', this.key)
-    // console.log(this.$store.getters.key)
-  }
+    axios.get('/getKey').then(response => {
+      this.key = response.data
+      connect(this.key)
+    })
+
+    setInterval(() => {
+      this.text = getText()
+    }, 500)
+  },
+
+  computed: {},
+
+  methods: {}
 
 }
 </script>
 
-<style>
 
+<style>
+#qr-img {
+  /*height: 75vh;*/
+}
 </style>

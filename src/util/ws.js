@@ -1,24 +1,26 @@
 import SockJS from 'sockjs-client'
 import {Stomp} from '@stomp/stompjs'
-// import store from '@/store/index'
 
 
-var stompClient = null
+let text = ''
 
-export function connect() {
+let stompClient = null
+
+export function connect(key) {
     const socket = new SockJS('/websocket')
     stompClient = Stomp.over(socket)
     stompClient.connect({}, () => {
-        stompClient.subscribe('/topic/activity', message => callback(message))
+        stompClient.subscribe('/topic/activity/' + key, message => callback(message))
     })
 }
 
 
 function callback(message) {
-    console.log(JSON.parse(message.body))
-    // console.log(store.getters.key)
-    // if (store.getters.key == JSON.parse(message.body).key)
-    //     alert(message.body)
+    text = message.body
+}
+
+export function getText(){
+    return text
 }
 
 
