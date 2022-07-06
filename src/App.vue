@@ -3,20 +3,23 @@
     <div>
       <button
           class="buttons"
-          @click="isMobileMode=false"
+          @click="isScannerMode=false"
           v-text="'host'"
+          :class="[isScannerMode ? 'selected' : '']"
       />
       <button
           class="buttons"
-          @click="isMobileMode=true"
+          @click="isScannerMode=true"
           v-text="'scanner'"
+          :class="[isScannerMode ? 'selected' : '']"
       />
     </div>
-    <Scanner v-if="isMobileMode"/>
+    <Scanner v-if="isScannerMode"/>
     <Host v-else/>
 
   </div>
 </template>
+
 
 
 <script>
@@ -25,8 +28,6 @@ import Scanner from "@/components/Scanner";
 import Host from "@/components/Host";
 
 export default {
-
-
   components: {
     Scanner,
     Host
@@ -34,30 +35,28 @@ export default {
 
   data() {
     return {
-      isMobileMode: true
+      isScannerMode: true
     }
   },
 
   mounted() {
-    this.isMobileMode = this.isMobile
+    this.isScannerMode = this.isMobile
   },
 
   methods: {},
 
   computed: {
     isMobile() {
-      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        return true
-      } else {
-        return false
-      }
+      return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
     }
   }
 
 }
 </script>
 
-<style>
+
+
+<style scoped>
 .main {
   text-align: center;
 }
@@ -67,5 +66,8 @@ export default {
   cursor: pointer;
   font-size: 25px;
   padding: 10px 50px;
+}
+.buttons.selected{
+
 }
 </style>
