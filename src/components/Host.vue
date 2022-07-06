@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="key !== ''">
     <p class="decode-result"
        v-text="text"/>
     <img id="qr-img"
@@ -28,7 +28,6 @@ export default {
       this.key = response.data
       connect(this.key)
     })
-
     setInterval(() => {
       this.text = getText()
     }, 500)
@@ -42,11 +41,13 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 #qr-img {
   /*height: 75vh;*/
 }
-.decode-result{
+
+.decode-result {
+  margin: 5px;
   font-size: 24px;
 }
 </style>
