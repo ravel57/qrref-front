@@ -30,9 +30,9 @@ export default {
 
   data() {
     return {
-      scanResult: String,
-      error: String,
-      text: String,
+      scanResult: '',
+      error: '',
+      text: '',
     }
   },
 
