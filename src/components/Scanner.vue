@@ -2,10 +2,10 @@
   <div class="scanner">
     <p class="error">{{ error }}</p>
 
-    <input id="input-text"
+    <input id="input"
            v-model="text">
 
-    <!--    <p class="decode-result">Last result: <b>{{ scanResult }}</b></p>-->
+    <!--<p class="decode-result">Last result: <b>{{ scanResult }}</b></p>-->
 
     <qrcode-stream
         @decode="onDecode"
@@ -13,6 +13,7 @@
     />
   </div>
 </template>
+
 
 
 <script>
@@ -29,9 +30,9 @@ export default {
 
   data() {
     return {
-      scanResult: '',
-      error: '',
-      text: ''
+      scanResult: String,
+      error: String,
+      text: String,
     }
   },
 
@@ -41,9 +42,7 @@ export default {
     onDecode(scanResult) {
       this.scanResult = scanResult
       let url = new URL(scanResult)
-      let params = new URLSearchParams(url).entries()
-      let key = params.forEach(p => p[0] === 'key')[1]
-      console.log(key)
+      let key = url.searchParams.get('key')
       let text = this.text
       axios.post('/' + key, null, {params: {text}})
           .then(/*response => console.log(response.data)*/)
@@ -80,8 +79,9 @@ export default {
 </script>
 
 
+
 <style scoped>
-#input-text {
+#input {
   width: 50vw;
   margin: 5px;
   font-size: 24px;

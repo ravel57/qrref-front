@@ -5,13 +5,13 @@
           class="buttons"
           @click="isScannerMode=false"
           v-text="'host'"
-          :class="[isScannerMode ? 'selected' : '']"
+          :class="{ selected : !isScannerMode }"
       />
       <button
           class="buttons"
           @click="isScannerMode=true"
           v-text="'scanner'"
-          :class="[isScannerMode ? 'selected' : '']"
+          :class="{ selected : isScannerMode }"
       />
     </div>
     <Scanner v-if="isScannerMode"/>
@@ -66,8 +66,13 @@ export default {
   cursor: pointer;
   font-size: 25px;
   padding: 10px 50px;
+  border: solid 1px;
+  border-radius: 10px;
 }
-.buttons.selected{
 
+.buttons.selected {
+  border-color: #1e90ff;
+  font-weight: 700;
+  border: solid 2px;
 }
 </style>

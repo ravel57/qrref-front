@@ -19,7 +19,7 @@ function callback(message) {
     text = message.body
 }
 
-export function getText(){
+export function getText() {
     return text
 }
 
@@ -28,5 +28,4 @@ export function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect()
     }
-    console.log("Disconnected")
 }
