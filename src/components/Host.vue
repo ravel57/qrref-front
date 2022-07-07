@@ -1,6 +1,8 @@
 <template>
   <div v-if="key !== String">
     <p class="decode-result"
+       v-text="'Полученный текст:'"/>
+    <p class="decode-result"
        v-text="text"/>
     <img id="qr-img"
          :src="'/getQr/'+key"/>

@@ -1,8 +1,10 @@
 <template>
   <div class="scanner">
-    <p class="error">{{ error }}</p>
-
-    <input id="input"
+    <p class="error"
+       v-text="error"/>
+    <p class="input"
+        v-text="'Текст для перессылки:'"/>
+    <input class="input"
            v-model="text">
 
     <!--<p class="decode-result">Last result: <b>{{ scanResult }}</b></p>-->
@@ -13,7 +15,6 @@
     />
   </div>
 </template>
-
 
 
 <script>
@@ -79,9 +80,8 @@ export default {
 </script>
 
 
-
 <style scoped>
-#input {
+.input {
   width: 50vw;
   margin: 5px;
   font-size: 24px;
