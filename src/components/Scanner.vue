@@ -41,6 +41,8 @@ export default {
 
   methods: {
     onDecode(scanResult) {
+      if (!scanResult.toString().startsWith('https://'))
+        scanResult = 'https://' + scanResult
       this.scanResult = scanResult
       let url = new URL(scanResult)
       let key = url.searchParams.get('key')
