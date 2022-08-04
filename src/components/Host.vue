@@ -57,7 +57,7 @@ export default {
         this.updateKey()
       }
 
-      if (this.autoUrlAssign) {
+      if (this.autoUrlAssign === true) {
         this.urlAssign(this.text)
       }
 
