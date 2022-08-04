@@ -4,13 +4,13 @@
       <button
           class="buttons"
           @click="isScannerMode=false"
-          v-text="'Получить'"
+          v-text="'Режим приема'"
           :class="{ selected : !isScannerMode }"
       />
       <button
           class="buttons"
           @click="isScannerMode=true"
-          v-text="'Отправить'"
+          v-text="'Режим отправки'"
           :class="{ selected : isScannerMode }"
       />
     </div>
