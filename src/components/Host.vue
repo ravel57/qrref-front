@@ -24,7 +24,7 @@
 
 <script>
 import axios from "axios";
-import {connect, getText, disconnect} from '@/util/ws'
+import {connect, getText, disconnect, resetText} from '@/util/ws'
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -43,16 +43,24 @@ export default {
       this.autoUrlAssign = localStorage.autoUrlAssign;
     }
     let timer = new Date() - 30000
+
     setInterval(() => {
       let dif = Math.round((new Date() - timer))
       if (dif >= 30000) {
-        this.updateKey()
         timer = new Date()
+        this.updateKey()
       }
-      this.text = getText()
+      if (this.text !== getText()) {
+        this.text = getText()
+        setTimeout(() => {
+        }, 3000)
+        this.updateKey()
+      }
+
       if (this.autoUrlAssign) {
         this.urlAssign(this.text)
       }
+
     }, 500)
   },
 
@@ -66,9 +74,12 @@ export default {
         connect(this.key)
       })
     },
+
     urlAssign(text) {
       try {
-        window.location.assign(new URL(text));
+        new URL(text)
+        resetText()
+        window.open(text, '_blank').focus()
         // eslint-disable-next-line no-empty
       } catch {
       }

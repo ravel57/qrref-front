@@ -23,6 +23,10 @@ export function getText() {
     return text
 }
 
+export function resetText() {
+    text = ''
+}
+
 
 export function disconnect() {
     if (stompClient !== null) {

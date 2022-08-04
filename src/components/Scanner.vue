@@ -3,10 +3,9 @@
     <p class="error"
        v-text="error"/>
     <p class="input"
-        v-text="'Текст для перессылки:'"/>
+       v-text="'Текст для перессылки:'"/>
     <input class="input"
-           v-model="text">
-
+           @input='evt => text = evt.target.value'/>
     <!--<p class="decode-result">Last result: <b>{{ scanResult }}</b></p>-->
 
     <qrcode-stream
