@@ -68,8 +68,6 @@ export default {
     },
     urlAssign(text) {
       try {
-        if (!text.toString().startsWith('https://'))
-          text = 'https://' + text
         window.location.assign(new URL(text));
         // eslint-disable-next-line no-empty
       } catch {
