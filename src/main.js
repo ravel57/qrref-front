@@ -1,7 +1,8 @@
-//* eslint-disable */
-import {createApp} from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
+import VueApexCharts from "vue3-apexcharts";
+import './assets/index.css'
 
-
-//const app =
-createApp(App).mount('#app')
+createApp(App)
+	.use(VueApexCharts)
+	.mount('#app')
