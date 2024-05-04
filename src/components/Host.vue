@@ -11,7 +11,7 @@
 				   v-text="text"/>
 			</div>
 			<img id="qr-img"
-				 :src="'http://localhost:8080/getQr/'+key" alt="qrCode"/>
+				 :src="'/getQr/'+key" alt="qrCode"/>
 		</div>
 	</div>
 </template>
@@ -65,7 +65,7 @@ export default {
 
 	methods: {
 		updateKey() {
-			axios.get('http://localhost:8080/getKey').then(response => {
+			axios.get('/getKey').then(response => {
 				this.key = response.data
 				disconnect()
 				connect(this.key)

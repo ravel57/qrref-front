@@ -8,7 +8,7 @@ let stompClient = null
 
 export function connect() {
     stompClient = Stomp.over(function(){
-        return new SockJS('http://localhost:8080/websocket')
+        return new SockJS('/websocket')
     })
     stompClient.debug = function() {}
     stompClient.reconnect_delay = 5000
