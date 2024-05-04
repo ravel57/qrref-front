@@ -1,78 +1,100 @@
 <template>
-  <div class="main">
-    <div>
-      <button
-          class="buttons"
-          @click="isScannerMode=false"
-          v-text="'Режим приема'"
-          :class="{ selected : !isScannerMode }"
-      />
-      <button
-          class="buttons"
-          @click="isScannerMode=true"
-          v-text="'Режим отправки'"
-          :class="{ selected : isScannerMode }"
-      />
-    </div>
-    <Scanner v-if="isScannerMode"/>
-    <Host v-else/>
-
-  </div>
+	<div class="main">
+		<div class="toggle">
+			<fwb-toggle @click.stop="switchTheme" label="Темная тема"/>
+		</div>
+		<div class="chosenBoard">
+			<div class="inline-flex rounded-md shadow-sm" role="group">
+				<fwb-button style="margin-right: 20px" @click="isScannerMode = false" color="default">Прием</fwb-button>
+				<fwb-button @click="isScannerMode = true" color="default">Отправка</fwb-button>
+			</div>
+		</div>
+		<Host v-if="!isScannerMode"/>
+		<Scanner v-else/>
+	</div>
 </template>
 
 
-
 <script>
+import {connect} from '@/util/ws'
+import Scanner from "@/components/Scanner.vue"
+import Host from "@/components/Host.vue"
+import {FwbButton, FwbToggle} from "flowbite-vue";
 
-import Scanner from "@/components/Scanner";
-import Host from "@/components/Host";
+connect()
 
 export default {
-  components: {
-    Scanner,
-    Host
-  },
+	components: {
+		Scanner,
+		Host,
+		FwbButton,
+		FwbToggle
 
-  data() {
-    return {
-      isScannerMode: true
-    }
-  },
+	},
+	data() {
+		return {
+			processing: true,
+			activeTab: 'host',
+			darkTheme: false,
+			isScannerMode: false
+		}
+	},
 
-  mounted() {
-    this.isScannerMode = this.isMobile
-  },
+	mounted() {
+		this.isScannerMode = this.isMobile
+	},
 
-  methods: {},
+	methods: {
+		switchTheme() {
+			// Toggle на @click отправляет 2 события click за себя и за label
+			this.processing = !this.processing
+			if (this.processing){
+				this.darkTheme = !this.darkTheme
+				if (this.darkTheme) {
+					document.documentElement.classList.add('dark')
+					document.getElementsByTagName("body")[0].style.backgroundColor = '#202127'
+				} else {
+					document.documentElement.classList.remove('dark')
+					document.getElementsByTagName("body")[0].style.backgroundColor = '#ffffff'
+				}
+			}
+		},
+	},
 
-  computed: {
-    isMobile() {
-      return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
-    }
-  }
+	computed: {
+		isMobile() {
+			return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+		}
+	}
 
 }
 </script>
 
 
-
 <style scoped>
 .main {
-  text-align: center;
+	padding: 20px;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
 }
 
-.buttons {
-  margin: 0 50px 15px;
-  cursor: pointer;
-  font-size: 25px;
-  padding: 10px 50px;
-  border: solid 1px;
-  border-radius: 10px;
+.chosenBoard {
+	width: 30vw;
+	height: 50px;
+	display: flex;
+	justify-content: center;
+
+	button {
+		min-width: 100px;
+		width: 100%;
+		height: 100%;
+	}
 }
 
-.buttons.selected {
-  border-color: #1e90ff;
-  font-weight: 700;
-  border: solid 2px;
+.toggle {
+	display: block;
+	align-items: end;
+	margin-bottom: 15px;
 }
 </style>

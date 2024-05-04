@@ -1,4 +1,4 @@
-import SockJS from 'sockjs-client'
+import SockJS from "sockjs-client/dist/sockjs"
 import {Stomp} from '@stomp/stompjs'
 
 
@@ -6,11 +6,14 @@ let text = ''
 
 let stompClient = null
 
-export function connect(key) {
-    const socket = new SockJS('/websocket')
-    stompClient = Stomp.over(socket)
+export function connect() {
+    stompClient = Stomp.over(function(){
+        return new SockJS('http://localhost:8080/websocket')
+    })
+    stompClient.debug = function() {}
+    stompClient.reconnect_delay = 5000
     stompClient.connect({}, () => {
-        stompClient.subscribe('/topic/activity/' + key, message => callback(message))
+        stompClient.subscribe('/topic/activity/', message => callback(message))
     })
 }
 
