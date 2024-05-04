@@ -120,38 +120,53 @@ export default {
 
 
 .scanner {
-	width: 70%;
+	width: 100%;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+}
 
-	span {
-		margin-top: 15px;
-		margin-bottom: 0;
-	}
+span {
+	margin-top: 15px;
+	margin-bottom: 0;
+}
 
-	label {
-		margin-top: 15px;
-		max-width: 70%;
-		min-width: 50%;
-		margin-bottom: 0;
-	}
+label {
+	margin-top: 15px;
+	max-width: 70%;
+	min-width: 50%;
+	margin-bottom: 0;
+}
 
-	.buttonBlock {
-		width: 40%;
+.buttonBlock {
+	width: 50%;
 
-		a {
-			cursor: pointer;
-			width: 100%;
-			text-align: center;
-		}
+	a {
+		cursor: pointer;
+		width: 100%;
+		text-align: center;
 	}
 }
 
+.file-input {
+	width:50%;
+}
+
 @media screen and (max-width: 428px) {
+	p {
+		font-size: 12px;
+	}
 	label {
+		font-size: 12px;
 		width: 100%;
+	}
+
+	span {
+		font-size: 12px;
+		width: 100%;
+		margin-top: 15px;
+		margin-bottom: 0;
 	}
 
 	.scanner {
@@ -163,6 +178,10 @@ export default {
 	}
 
 	.buttonBlock {
+		width: 100%;
+	}
+
+	.file-input {
 		width: 100%;
 	}
 }

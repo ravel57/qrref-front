@@ -1,16 +1,18 @@
 <template>
 	<div class="main">
-		<div class="toggle">
-			<fwb-toggle @click.stop="switchTheme" label="Темная тема"/>
-		</div>
-		<div class="chosenBoard">
-			<div class="inline-flex rounded-md shadow-sm" role="group">
-				<fwb-button style="margin-right: 20px" @click="isScannerMode = false" color="default">Прием</fwb-button>
-				<fwb-button @click="isScannerMode = true" color="default">Отправка</fwb-button>
+		<div class="container">
+			<div class="toggle">
+				<fwb-toggle @click.stop="switchTheme" label="Темная тема"/>
 			</div>
+			<div class="chosenBoard">
+				<div class="inline-flex rounded-md shadow-sm" role="group">
+					<fwb-button class="menuBtn" style="width: 100%" @click="isScannerMode = false" color="default">Прием</fwb-button>
+					<fwb-button class="menuBtn" @click="isScannerMode = true" color="default">Отправка</fwb-button>
+				</div>
+			</div>
+			<Host v-if="!isScannerMode"/>
+			<Scanner v-else/>
 		</div>
-		<Host v-if="!isScannerMode"/>
-		<Scanner v-else/>
 	</div>
 </template>
 
@@ -79,17 +81,25 @@ export default {
 	flex-direction: column;
 }
 
+.container {
+	width: 50%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
 .chosenBoard {
 	width: 30vw;
 	height: 50px;
 	display: flex;
 	justify-content: center;
+}
 
-	button {
-		min-width: 100px;
-		width: 100%;
-		height: 100%;
-	}
+.menuBtn {
+	margin-left: 10px;
+	min-width: 100px;
+	width: 100%;
+	height: 100%;
 }
 
 .toggle {
