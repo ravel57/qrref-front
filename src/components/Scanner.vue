@@ -1,13 +1,6 @@
 <template>
 	<div class="scanner">
-		<!--		<p class="error"-->
-		<!--		   v-text="error"/>-->
 		<fwb-p style="color: red; margin-top: 15px">{{ error }}</fwb-p>
-		<!--		<p class="input"-->
-		<!--		   v-text="''"/>-->
-		<!--    <input class="input"-->
-		<!--           @input=''/>-->
-		<!--<p class="decode-result">Last result: <b>{{ scanResult }}</b></p>-->
 		<div class="inline-flex rounded-md shadow-sm buttonBlock">
 			<a @click="isText = true" aria-current="page"
 			   class="px-4 py-2 text-sm font-medium text-blue-700 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
@@ -33,6 +26,7 @@
 			label="Файл для перессылки"/>
 
 		<qrcode-stream
+			class="qrcode-stream"
 			@decode="onDecode"
 			@init="onInit"
 		/>
@@ -42,7 +36,7 @@
 
 <script>
 import axios from "axios";
-import { QrcodeStream } from 'qrcode-reader-vue3'
+import {QrcodeStream} from 'qrcode-reader-vue3'
 import {FwbButton, FwbFileInput, FwbP, FwbTab, FwbTabs, FwbTextarea} from "flowbite-vue";
 
 
@@ -118,6 +112,10 @@ export default {
 
 <style scoped>
 
+.qrcode-stream {
+	margin-top: 15px;
+	width: 50%;
+}
 
 .scanner {
 	width: 100%;
@@ -153,7 +151,12 @@ label {
 	width: 50%;
 }
 
-@media screen and (max-width: 428px) {
+@media screen and (max-width: 650px) {
+
+	.qrcode-stream {
+		width: 100%;
+	}
+
 	p {
 		font-size: 12px;
 	}
@@ -171,7 +174,7 @@ label {
 	}
 
 	.scanner {
-		width: 100%;
+		width: 200%;
 
 		.file-input {
 			width: unset;
