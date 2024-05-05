@@ -2,7 +2,7 @@
 	<div class="main">
 		<div class="container">
 			<div class="toggle">
-				<fwb-toggle @click.stop="switchTheme" label="Темная тема"/>
+				<fwb-toggle v-model="darkTheme" label="Темная тема"/>
 			</div>
 			<div class="chosenBoard">
 				<div class="inline-flex rounded-md shadow-sm" role="group">
@@ -37,34 +37,32 @@ export default {
 	},
 	data() {
 		return {
-			processing: true,
 			activeTab: 'host',
-			darkTheme: false,
+			darkTheme: localStorage.getItem('darkTheme') === "true",
 			isScannerMode: false
 		}
 	},
-
 	mounted() {
+		this.switchTheme()
 		this.isScannerMode = this.isMobile
 	},
-
 	methods: {
 		switchTheme() {
-			// Toggle на @click отправляет 2 события click за себя и за label
-			this.processing = !this.processing
-			if (this.processing) {
-				this.darkTheme = !this.darkTheme
-				if (this.darkTheme) {
-					document.documentElement.classList.add('dark')
-					document.getElementsByTagName("body")[0].style.backgroundColor = '#202127'
-				} else {
-					document.documentElement.classList.remove('dark')
-					document.getElementsByTagName("body")[0].style.backgroundColor = '#ffffff'
-				}
+			if (this.darkTheme) {
+				document.documentElement.classList.add('dark')
+				document.getElementsByTagName("body")[0].style.backgroundColor = '#202127'
+			} else {
+				document.documentElement.classList.remove('dark')
+				document.getElementsByTagName("body")[0].style.backgroundColor = '#ffffff'
 			}
 		},
 	},
-
+	watch: {
+		darkTheme(newVal, oldVal) {
+			localStorage.setItem('darkTheme', newVal)
+			this.switchTheme()
+		}
+	},
 	computed: {
 		isMobile() {
 			return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
