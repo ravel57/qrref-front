@@ -42,7 +42,7 @@
 
 <script>
 import axios from "axios";
-import {QrcodeStream} from "../../node_modules/vue3-qrcode-reader/src"
+import { QrcodeStream } from 'qrcode-reader-vue3'
 import {FwbButton, FwbFileInput, FwbP, FwbTab, FwbTabs, FwbTextarea} from "flowbite-vue";
 
 
@@ -75,13 +75,13 @@ export default {
 
 	methods: {
 		onDecode(scanResult) {
-			if (!scanResult.toString().startsWith('https://'))
-				scanResult = 'https://' + scanResult
+			if (!scanResult.toString().startsWith('http://'))
+				scanResult = 'http://' + scanResult
 			this.scanResult = scanResult
 			let url = new URL(scanResult)
 			let key = url.searchParams.get('key')
 			let text = this.text
-			axios.post('/' + key, null, {params: {text}})
+			axios.post('http://localhost:8080/' + key, null, {params: {text}})
 				.then(/*response => console.log(response.data)*/)
 		},
 
@@ -120,38 +120,54 @@ export default {
 
 
 .scanner {
-	width: 70%;
+	width: 100%;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+}
 
-	span {
-		margin-top: 15px;
-		margin-bottom: 0;
-	}
+span {
+	margin-top: 15px;
+	margin-bottom: 0;
+}
 
-	label {
-		margin-top: 15px;
-		max-width: 70%;
-		min-width: 50%;
-		margin-bottom: 0;
-	}
+label {
+	margin-top: 15px;
+	max-width: 70%;
+	min-width: 50%;
+	margin-bottom: 0;
+}
 
-	.buttonBlock {
-		width: 40%;
+.buttonBlock {
+	width: 50%;
 
-		a {
-			cursor: pointer;
-			width: 100%;
-			text-align: center;
-		}
+	a {
+		cursor: pointer;
+		width: 100%;
+		text-align: center;
 	}
 }
 
+.file-input {
+	width: 50%;
+}
+
 @media screen and (max-width: 428px) {
+	p {
+		font-size: 12px;
+	}
+
 	label {
+		font-size: 12px;
 		width: 100%;
+	}
+
+	span {
+		font-size: 12px;
+		width: 100%;
+		margin-top: 15px;
+		margin-bottom: 0;
 	}
 
 	.scanner {
@@ -163,6 +179,10 @@ export default {
 	}
 
 	.buttonBlock {
+		width: 100%;
+	}
+
+	.file-input {
 		width: 100%;
 	}
 }

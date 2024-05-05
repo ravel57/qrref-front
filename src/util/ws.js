@@ -6,14 +6,14 @@ let text = ''
 
 let stompClient = null
 
-export function connect() {
+export function connect(key) {
     stompClient = Stomp.over(function(){
         return new SockJS('/websocket')
     })
     stompClient.debug = function() {}
     stompClient.reconnect_delay = 5000
     stompClient.connect({}, () => {
-        stompClient.subscribe('/topic/activity/', message => callback(message))
+        stompClient.subscribe('/topic/activity/' + key, message => callback(message))
     })
 }
 

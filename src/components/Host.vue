@@ -1,14 +1,12 @@
 <template>
 	<div>
 		<div class="checkbox">
-			<fwb-checkbox v-model="autoUrlAssign" label="Авто переход по ссылке" />
+			<fwb-checkbox v-model="autoUrlAssign" label="Авто переход по ссылке"/>
 		</div>
 		<div v-if="key !== String">
 			<div class="result" v-if="text">
-				<p class="decode-result"
-				   v-text="'Полученный текст:'"/>
-				<p class="decode-result"
-				   v-text="text"/>
+				<fwb-p>Полученный текст:</fwb-p>
+				<fwb-p>{{ text }}</fwb-p>
 			</div>
 			<img id="qr-img"
 				 :src="'/getQr/'+key" alt="qrCode"/>
@@ -16,16 +14,15 @@
 	</div>
 </template>
 
-
 <script>
 import axios from "axios";
 import {connect, getText, disconnect, resetText} from '@/util/ws'
-import {FwbCheckbox, FwbImg} from "flowbite-vue";
+import {FwbCheckbox, FwbImg, FwbP} from "flowbite-vue";
 
 export default {
 	// eslint-disable-next-line vue/multi-word-component-names
 	name: "Host",
-	components: {FwbCheckbox, FwbImg},
+	components: {FwbP, FwbCheckbox, FwbImg},
 
 	data() {
 		return {
@@ -97,7 +94,8 @@ export default {
 #qr-img {
 	/*height: 75vh;*/
 }
-.checkbox{
+
+.checkbox {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -105,12 +103,16 @@ export default {
 	margin-bottom: 15px;
 }
 
+.result {
+	padding: 5px;
+	background-color: #333231;
+	border-radius: 10px;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
 .decode-result {
 	margin: 5px;
 	font-size: 24px;
-}
-
-.text {
-	font-size: 17px;
 }
 </style>
