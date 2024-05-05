@@ -42,7 +42,7 @@
 
 <script>
 import axios from "axios";
-import {QrcodeStream} from "../../node_modules/vue3-qrcode-reader/src"
+import { QrcodeStream } from 'qrcode-reader-vue3'
 import {FwbButton, FwbFileInput, FwbP, FwbTab, FwbTabs, FwbTextarea} from "flowbite-vue";
 
 
@@ -75,13 +75,13 @@ export default {
 
 	methods: {
 		onDecode(scanResult) {
-			if (!scanResult.toString().startsWith('https://'))
-				scanResult = 'https://' + scanResult
+			if (!scanResult.toString().startsWith('http://'))
+				scanResult = 'http://' + scanResult
 			this.scanResult = scanResult
 			let url = new URL(scanResult)
 			let key = url.searchParams.get('key')
 			let text = this.text
-			axios.post('/' + key, null, {params: {text}})
+			axios.post('http://localhost:8080/' + key, null, {params: {text}})
 				.then(/*response => console.log(response.data)*/)
 		},
 
@@ -150,13 +150,14 @@ label {
 }
 
 .file-input {
-	width:50%;
+	width: 50%;
 }
 
 @media screen and (max-width: 428px) {
 	p {
 		font-size: 12px;
 	}
+
 	label {
 		font-size: 12px;
 		width: 100%;

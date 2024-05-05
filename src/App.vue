@@ -6,7 +6,9 @@
 			</div>
 			<div class="chosenBoard">
 				<div class="inline-flex rounded-md shadow-sm" role="group">
-					<fwb-button class="menuBtn" style="width: 100%" @click="isScannerMode = false" color="default">Прием</fwb-button>
+					<fwb-button class="menuBtn" style="width: 100%" @click="isScannerMode = false" color="default">
+						Прием
+					</fwb-button>
 					<fwb-button class="menuBtn" @click="isScannerMode = true" color="default">Отправка</fwb-button>
 				</div>
 			</div>
@@ -50,7 +52,7 @@ export default {
 		switchTheme() {
 			// Toggle на @click отправляет 2 события click за себя и за label
 			this.processing = !this.processing
-			if (this.processing){
+			if (this.processing) {
 				this.darkTheme = !this.darkTheme
 				if (this.darkTheme) {
 					document.documentElement.classList.add('dark')
