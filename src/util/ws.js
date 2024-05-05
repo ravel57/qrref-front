@@ -13,7 +13,7 @@ export function connect(key) {
     stompClient.debug = function() {}
     stompClient.reconnect_delay = 5000
     stompClient.connect({}, () => {
-        stompClient.subscribe('/topic/activity/' + key, message => callback(message))
+        stompClient.subscribe(`/topic/activity/${key}`, message => callback(message))
     })
 }
 

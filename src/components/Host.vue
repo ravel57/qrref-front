@@ -9,7 +9,7 @@
 				<fwb-p>{{ text }}</fwb-p>
 			</div>
 			<img id="qr-img"
-				 :src="'/getQr/'+key" alt="qrCode"/>
+			     :src="`/getQr/${key}`" alt="qrCode"/>
 		</div>
 	</div>
 </template>
@@ -20,17 +20,15 @@ import {connect, getText, disconnect, resetText} from '@/util/ws'
 import {FwbCheckbox, FwbImg, FwbP} from "flowbite-vue";
 
 export default {
-	// eslint-disable-next-line vue/multi-word-component-names
 	name: "Host",
+
 	components: {FwbP, FwbCheckbox, FwbImg},
 
-	data() {
-		return {
-			key: String,
-			text: String,
-			autoUrlAssign: true,
-		}
-	},
+	data: () => ({
+		key: String,
+		text: String,
+		autoUrlAssign: true,
+	}),
 
 	mounted() {
 		if (localStorage.autoUrlAssign) {
@@ -111,6 +109,7 @@ export default {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
+
 .decode-result {
 	margin: 5px;
 	font-size: 24px;
