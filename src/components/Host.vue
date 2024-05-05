@@ -4,10 +4,14 @@
 			<fwb-checkbox v-model="autoUrlAssign" label="Авто переход по ссылке"/>
 		</div>
 		<div v-if="key !== String">
-			<div class="result" v-if="text">
-				<fwb-p>Полученный текст:</fwb-p>
-				<fwb-p>{{ text }}</fwb-p>
-			</div>
+			<fwb-textarea
+				style="margin-bottom: 15px;"
+				v-if="text"
+				@input="text"
+				v-model="text"
+				label="Полученный текст"
+				readonly
+			/>
 			<img id="qr-img"
 				 :src="`/getQr/${key}`" alt="qrCode"/>
 		</div>
@@ -17,13 +21,13 @@
 <script>
 import axios from "axios";
 import {connect, getText, disconnect, resetText} from '@/util/ws'
-import {FwbCheckbox, FwbImg, FwbP} from "flowbite-vue";
+import {FwbCheckbox, FwbImg, FwbP, FwbTextarea} from "flowbite-vue";
 import fs from 'fs/promises';
 
 export default {
 	name: "Host",
 
-	components: {FwbP, FwbCheckbox, FwbImg},
+	components: {FwbTextarea, FwbP, FwbCheckbox, FwbImg},
 
 	data: () => ({
 		key: String,
