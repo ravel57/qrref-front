@@ -9,7 +9,7 @@
 				<fwb-p>{{ text }}</fwb-p>
 			</div>
 			<img id="qr-img"
-			     :src="`/getQr/${key}`" alt="qrCode"/>
+				 :src="`/getQr/${key}`" alt="qrCode"/>
 		</div>
 	</div>
 </template>
@@ -18,6 +18,7 @@
 import axios from "axios";
 import {connect, getText, disconnect, resetText} from '@/util/ws'
 import {FwbCheckbox, FwbImg, FwbP} from "flowbite-vue";
+import fs from 'fs/promises';
 
 export default {
 	name: "Host",
@@ -43,7 +44,11 @@ export default {
 				this.updateKey()
 			}
 			if (this.text !== getText()) {
-				this.text = getText()
+				if (getText().startsWith("file/")) {
+					this.downloadFile(getText())
+				} else {
+					this.text = getText()
+				}
 				setTimeout(() => {
 				}, 3000)
 				this.updateKey()
@@ -59,6 +64,10 @@ export default {
 	computed: {},
 
 	methods: {
+		downloadFile(url) {
+			window.open(`/${url}`, '_blank')
+			resetText()
+		},
 		updateKey() {
 			axios.get('/getKey').then(response => {
 				this.key = response.data

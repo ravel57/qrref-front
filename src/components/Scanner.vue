@@ -76,8 +76,7 @@ export default {
 			let key = new URL(scanResult).searchParams.get('key')
 			let text = this.text
 			if (this.text) {
-				axios.post(`/text/${key}`, text)
-					.then(/*response => console.log(response.data)*/)
+				axios.post(`/text/${key}`, {text: this.text})
 			}
 			if (this.file) {
 				let formData = new FormData();
