@@ -68,8 +68,39 @@ export default {
 	computed: {},
 
 	methods: {
-		downloadFile(url) {
-			window.open(`/${url}`, '_blank')
+		async downloadFile(url) {
+			axios({
+				url: `/${url}`,
+				method: 'GET',
+				responseType: 'blob'
+			})
+				.then(response => {
+					const contentDisposition = response.headers['content-disposition']
+					console.log(response.headers);
+					let filename = 'default-filename.jpg'; // Значение по умолчанию
+					if (contentDisposition) {
+						const filenameMatch = contentDisposition.match(/filename="?([^";]+)"?/);
+						if (filenameMatch && filenameMatch[1]) {
+							filename = filenameMatch[1]; // Используем найденное имя файла
+						}
+					}
+
+					// Создаем URL из полученного Blob
+					const url = window.URL.createObjectURL(response.data);
+					// Создаем ссылку для скачивания
+					const link = document.createElement('a');
+					link.href = url;
+					link.setAttribute('download', filename); // Устанавливаем имя файла
+					document.body.appendChild(link);
+					link.click();
+
+					// Очистка после скачивания
+					window.URL.revokeObjectURL(url);
+					document.body.removeChild(link);
+				})
+				.catch(error => {
+					console.log('Error downloading file:', error);
+				});
 			resetText()
 		},
 		updateKey() {
