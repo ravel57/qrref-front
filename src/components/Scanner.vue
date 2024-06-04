@@ -86,6 +86,7 @@ export default {
 						'Content-Type': 'multipart/form-data'
 					}
 				})
+				this.file = null
 			}
 		},
 
@@ -130,6 +131,14 @@ export default {
 				ctx.stroke()
 			}
 		},
+		watch: {
+			text(newVal, oldVal) {
+				this.file = null
+			},
+			file(newVal, oldVal) {
+				this.text = null
+			}
+		}
 	},
 
 }
