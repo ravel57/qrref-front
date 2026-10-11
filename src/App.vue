@@ -2,48 +2,44 @@
 	<div class="main">
 		<div class="container">
 			<div class="toggle">
-				<fwb-toggle v-model="darkTheme" label="Темная тема"/>
+				<fwb-toggle v-model="darkTheme" :label="$t('darkTheme')"/>
 			</div>
-			<div class="chosenBoard">
+			<div class="chosenBoard" v-if="!session.roomId">
 				<div class="inline-flex rounded-md shadow-sm" role="group">
-					<fwb-button class="menuBtn" style="width: 100%" :class="{active: scannerMode === ScannerMode.HOST}"
-					:aria-pressed="scannerMode === ScannerMode.HOST" @click="scannerMode = ScannerMode.HOST" color="default">
-						Прием
+					<fwb-button class="menuBtn" :class="{active: scannerMode === ScannerMode.HOST}"
+											:aria-pressed="scannerMode === ScannerMode.HOST" @click="scannerMode = ScannerMode.HOST" color="default">
+						{{ $t('modeReceive') }}
 					</fwb-button>
 					<fwb-button class="menuBtn" :class="{active: scannerMode === ScannerMode.SCANNER}"
-					:aria-pressed="scannerMode === ScannerMode.SCANNER" @click="scannerMode = ScannerMode.SCANNER" color="default">
-						Отправка
-					</fwb-button>
-					<fwb-button class="menuBtn" :class="{active: scannerMode === ScannerMode.EXCHANGE}"
-					:aria-pressed="scannerMode === ScannerMode.EXCHANGE" @click="scannerMode = ScannerMode.EXCHANGE" color="default">
-						Обмен
+											:aria-pressed="scannerMode === ScannerMode.SCANNER" @click="scannerMode = ScannerMode.SCANNER" color="default">
+						{{ $t('modeSend') }}
 					</fwb-button>
 				</div>
 			</div>
-			<Host v-if="scannerMode === ScannerMode.HOST" @paired="scannerMode = ScannerMode.EXCHANGE"/>
-			<Scanner v-else-if="scannerMode === ScannerMode.SCANNER"/>
-			<Exchange v-else-if="scannerMode === ScannerMode.EXCHANGE"/>
+			<!-- Чат открывается поверх любого режима, пока устройство связано с другим -->
+			<Chat v-if="session.roomId"/>
+			<Host v-else-if="scannerMode === ScannerMode.HOST"/>
+			<Scanner v-else/>
 		</div>
 	</div>
 </template>
 
 
 <script lang="ts">
-import {connect} from '@/util/ws'
+import {session, startSession} from '@/util/session'
 import Scanner from "@/components/Scanner.vue"
 import Host from "@/components/Host.vue"
+import Chat from "@/components/Chat.vue"
 import {FwbButton, FwbToggle} from "flowbite-vue";
-import Exchange from "@/components/Exchange.vue";
 
 enum ScannerMode {
 	HOST,
 	SCANNER,
-	EXCHANGE,
 }
 
 export default {
 	components: {
-		Exchange,
+		Chat,
 		Scanner,
 		Host,
 		FwbButton,
@@ -55,18 +51,16 @@ export default {
 		darkTheme: localStorage.getItem('darkTheme') === "true",
 		scannerMode: ScannerMode.HOST,
 		ScannerMode,
+		session,
 	}),
 
 	mounted() {
-		connect()
+		startSession()
 		this.switchTheme()
 		const params = new URLSearchParams(window.location.search)
 		const hasKey = (params.get('key') || '').trim().length > 0
-		if (hasKey) {
-			this.scannerMode = this.isMobile ? ScannerMode.SCANNER : ScannerMode.EXCHANGE
-		} else {
-			this.scannerMode = this.isMobile ? ScannerMode.SCANNER : ScannerMode.HOST
-		}
+		// Открыли по ссылке из QR (камерой телефона) или зашли с телефона — сразу «Отправка».
+		this.scannerMode = (hasKey || this.isMobile) ? ScannerMode.SCANNER : ScannerMode.HOST
 	},
 
 	methods: {
@@ -114,10 +108,10 @@ export default {
 }
 
 .chosenBoard {
-	width: 30vw;
-	height: 50px;
+	width: 100%;
 	display: flex;
 	justify-content: center;
+	margin-bottom: 12px;
 }
 
 .menuBtn {
@@ -125,6 +119,7 @@ export default {
 	min-width: 100px;
 	width: 100%;
 	height: 100%;
+	white-space: normal;
 }
 
 /* Кнопка активного режима темнее остальных (в обеих темах) */

@@ -1,24 +1,26 @@
 <template>
 	<div>
 		<div class="checkbox">
-			<fwb-checkbox v-model="autoUrlAssign" label="Авто переход по ссылке"/>
+			<fwb-checkbox v-model="autoUrlAssign" :label="$t('hostAutoOpen')"/>
 		</div>
-		<fwb-p v-if="offline" style="color: #d44; text-align: center; margin-bottom: 10px">
-			Нет соединения с сервером (WebSocket): текст и файлы не придут.
+		<fwb-p v-if="session.offline" style="color: #d44; text-align: center; margin-bottom: 10px">
+			{{ $t('hostOffline') }}
 		</fwb-p>
-		<div v-if="key !== String">
+		<div v-if="session.key">
 			<fwb-textarea
 					style="margin-bottom: 15px;"
 					v-if="text"
-					@input="text"
 					v-model="text"
-					label="Полученный текст"
+					:label="$t('hostReceivedText')"
 					readonly
 			/>
 			<img id="qr-img"
-					 :src="`/getQr/${key}`" alt="qrCode"/>
+					 :src="`/getQr/${session.key}`" alt="qrCode"/>
+			<fwb-p class="hint">
+				{{ $t('hostQrHint') }}
+			</fwb-p>
 			<div class="resetKey">
-				<fwb-button color="default" size="xs" @click="resetKey">Сбросить ключ</fwb-button>
+				<fwb-button color="default" size="xs" @click="reset">{{ $t('hostResetKey') }}</fwb-button>
 			</div>
 		</div>
 	</div>
@@ -26,64 +28,45 @@
 
 <script>
 import axios from "axios";
-import {connect, getText, disconnect, resetText} from '@/util/ws'
-import {FwbButton, FwbCheckbox, FwbImg, FwbP, FwbTextarea} from "flowbite-vue";
-import fs from 'fs/promises';
+import {getText, resetText} from '@/util/ws'
+import {resetKey, session} from '@/util/session'
+import {FwbButton, FwbCheckbox, FwbP, FwbTextarea} from "flowbite-vue";
 
 export default {
 	name: "Host",
 
-	components: {FwbTextarea, FwbP, FwbCheckbox, FwbImg, FwbButton},
-
-	emits: ['paired'],
+	components: {FwbTextarea, FwbP, FwbCheckbox, FwbButton},
 
 	data: () => ({
-		key: String,
-		text: String,
+		session,
+		text: '',
 		autoUrlAssign: true,
-		offline: false,
-		offlineTimer: null,
 		tickTimer: null,
 	}),
 
 	mounted() {
 		if (localStorage.autoUrlAssign) {
-			this.autoUrlAssign = localStorage.autoUrlAssign;
+			this.autoUrlAssign = localStorage.autoUrlAssign === true || localStorage.autoUrlAssign === 'true';
 		}
-		let timer = new Date() - 30000
 
 		this.tickTimer = setInterval(() => {
-			let dif = Math.round((new Date() - timer))
-			if (dif >= 30000) {
-				timer = new Date()
-				this.updateKey()
-			}
 			if (this.text !== getText()) {
 				if (getText().startsWith("file/")) {
 					this.downloadFile(getText())
 				} else {
 					this.text = getText()
 				}
-				setTimeout(() => {
-				}, 3000)
-				this.updateKey()
 			}
 
 			if (this.autoUrlAssign === true) {
 				this.urlAssign(this.text)
 			}
-
 		}, 500)
 	},
 
 	beforeUnmount() {
-		// Без этого таймер переживал смену вкладки и каждые 30 секунд подменял обработчики сокета в «Обмене».
 		clearInterval(this.tickTimer)
-		clearTimeout(this.offlineTimer)
-		disconnect()
 	},
-
-	computed: {},
 
 	methods: {
 		async downloadFile(url) {
@@ -120,43 +103,12 @@ export default {
 					});
 			resetText()
 		},
-		/** Первое подключение и короткие обрывы не пугают: предупреждаем через 5 секунд. */
-		setOnline(online) {
-			clearTimeout(this.offlineTimer)
-			if (online) {
-				this.offline = false
-			} else {
-				this.offlineTimer = setTimeout(() => (this.offline = true), 5000)
-			}
-		},
-
-		/**
-		 * Подключение к сокету. Если этот компьютер сопрягли с другим (QR со вкладки «Прием» отсканировали
-		 * в режиме bridge), сервер присылает roomId, и мы сообщаем наверх — App открывает вкладку с чатом.
-		 */
-		connectSocket() {
-			connect(this.key, {
-				onStatus: online => this.setOnline(online),
-				onBridge: roomId => this.$emit('paired', roomId),
-			})
-		},
 
 		/** Новый ключ: старый QR перестаёт принимать данные. */
-		resetKey() {
-			axios.post('/resetKey').then(response => {
-				this.key = response.data
-				this.text = ''
-				resetText()
-				disconnect()
-				this.connectSocket()
-			})
-		},
-
-		updateKey() {
-			axios.get('/getKey').then(response => {
-				this.key = response.data
-				this.connectSocket()
-			})
+		async reset() {
+			this.text = ''
+			resetText()
+			await resetKey()
 		},
 
 		urlAssign(text) {
@@ -183,6 +135,14 @@ export default {
 <style scoped>
 #qr-img {
 	/*height: 75vh;*/
+}
+
+.hint {
+	max-width: 520px;
+	opacity: 0.7;
+	font-size: 12px;
+	text-align: center;
+	margin-top: 8px;
 }
 
 .resetKey {

@@ -92,6 +92,19 @@ export function subscribeRoom(id) {
 	if (client) subscribeToRoom(client)
 }
 
+/** Отписывается от текущей комнаты (чат закрыт). */
+export function unsubscribeRoom() {
+	roomId = ""
+	if (roomSubscription) {
+		try {
+			roomSubscription.unsubscribe()
+		} catch {
+			// соединение уже закрыто
+		}
+		roomSubscription = null
+	}
+}
+
 export function getText() {
 	return text
 }
